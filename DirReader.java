@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.regex.Pattern;
+import java.util.*;
 
 public class DirReader {
 
@@ -15,25 +16,32 @@ public class DirReader {
 
             /* List files present in the directory */
             File[] files = folder.listFiles();
+            List<File> fileList = new ArrayList<File>(Arrays.asList(files));
+
             if(files == null){
 
                 System.err.println("Folder not found");
 
                 return;
             }
-            int len = files.length;
 
-            for (int i = 0; i < len; i++) {
+            while(!fileList.isEmpty()){
 
-		/* Check if ith value is a file or not */
-                if (files[i].isFile()) {
+                File file = fileList.get(0);
+                fileList.remove(0);
+                if (file.isFile()) {
 
-                    if (Pattern.matches(regex, files[i].getName())) {
+                    if (Pattern.matches(regex, file.getName())) {
 
-                        System.out.println("File name = " + files[i].getAbsolutePath());
+                        System.out.println("File name = " + file.getAbsolutePath());
                     }
+                }else{
+
+                    fileList.addAll(Arrays.asList(file.listFiles()));
                 }
+
             }
+
         }catch (Exception ex){
 
             System.err.println("Exception" + ex);
@@ -72,3 +80,4 @@ public class DirReader {
 
     }
 }
+
